@@ -6,4 +6,4 @@ SVD = svd(U)
 r = 10
 sing_vals = SVD.S[1:r]
 l_sing_vecs = SVD.U[:, 1:r]
-X_hat = l_sing_vecs * U
+X_hat = l_sing_vecs' * U          # project snapshots onto POD basis: r × n_snapshots
