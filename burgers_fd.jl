@@ -36,9 +36,8 @@ const default_params = (
 """
     burgers_rhs!(du, u, ν, dx)
 
-Semi-discrete right-hand side du/dt at interior nodes. Boundary nodes are
-Dirichlet, so du = 0 there. Also useful for OpInf: it gives exact snapshot
-time derivatives.
+Semi-discrete right-hand side du/dt at interior nodes. Boundary conditions are
+Dirichlet, so du = 0 there.
 """
 function burgers_rhs!(du, u, ν, dx)
     N = length(u)
