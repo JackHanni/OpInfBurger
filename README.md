@@ -17,7 +17,7 @@ true POD-Galerkin reduced model.
 | File | Purpose |
 |---|---|
 | `burgers_fd.jl` | Full-order solver: 2nd-order centered finite differences in space, RK4 in time. Saves snapshots, exact time derivatives, a plot, and a GIF. |
-| `opInf.jl` | Operator inference: POD basis from the snapshots and projection to reduced coordinates (work in progress). |
+| `opInf.jl` | Operator inference: POD basis from the snapshots, projection to reduced coordinates, and the linear + quadratic data matrix (work in progress). |
 | `solver.jl` | The same problem solved with MethodOfLines.jl / ModelingToolkit.jl (much slower to load; kept for comparison). |
 
 ## Requirements
@@ -32,7 +32,8 @@ using Pkg; Pkg.add(["JLD2", "Plots"])
 
 ## Usage
 
-Generate the snapshot data (takes a few seconds; most of it is plotting):
+The snapshot data and figures are already in the repo, so `opInf.jl` runs straight after cloning.
+To regenerate them (takes a few seconds; most of it is plotting):
 
 ```bash
 julia burgers_fd.jl
@@ -43,6 +44,8 @@ This writes, next to the script:
 - `burgers_data.jld2` — `xs`, `ts`, `U` (N × n_snapshots), `dUdt` (exact semi-discrete time derivatives), `ν`, `N`, `dt`, `save_dt`, `uL`, `uR`
 - `burgers_snapshots.png` — solution at 11 times
 - `burgers.gif` — animation
+
+`burgers_sample_data.png` is the corresponding plot from `solver.jl`.
 
 Then run the reduced model script:
 
@@ -71,4 +74,5 @@ The `name` prefix keeps outputs from different runs separate.
 - Keep `N ≳ 1/ν`; smaller ν gives steeper fronts and needs a finer grid.
 - Use the saved `dUdt` rather than finite differences of `U` when fitting OpInf operators:
   accurate time derivatives make the regression much better conditioned.
-- Generated data and figures are git-ignored; rerun `burgers_fd.jl` to recreate them.
+- Generated data and figures are tracked in git. If you rerun `burgers_fd.jl` with new
+  parameters, commit the updated `burgers_data.jld2` and figures so they stay in sync with the code.
