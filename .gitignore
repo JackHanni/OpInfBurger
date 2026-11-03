@@ -1,7 +1,3 @@
-# generated figures (rerun burgers_fd.jl to regenerate)
-*.gif
-*.png
-
 # Julia
 Manifest.toml
 
