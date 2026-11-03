@@ -17,7 +17,7 @@ true POD-Galerkin reduced model.
 | File | Purpose |
 |---|---|
 | `burgers_fd.jl` | Full-order solver: 2nd-order centered finite differences in space, RK4 in time. Saves snapshots, exact time derivatives, a plot, and a GIF. |
-| `opInf.jl` | Operator inference: POD basis from the snapshots, projection to reduced coordinates, and the linear + quadratic data matrix (work in progress). |
+| `opInf.jl` | Operator inference: rank-`r` POD basis, reduced states and derivatives, Tikhonov-regularized least squares for $\hat A$ and $\hat H$ (compact quadratic form), then integrates the ROM with RK4 and compares it to the full model. |
 | `solver.jl` | The same problem solved with MethodOfLines.jl / ModelingToolkit.jl (much slower to load; kept for comparison). |
 
 ## Requirements
@@ -52,6 +52,10 @@ Then run the reduced model script:
 ```bash
 julia opInf.jl
 ```
+
+This prints the ROM's relative error $\|U_{\text{ROM}} - U\|_F / \|U\|_F$ and writes
+`burgers_rom.gif`, an animation of the full model vs. the OpInf ROM with the pointwise max error
+in the title. The POD dimension `r` and regularization `λ` are set near the top of `opInf.jl`.
 
 ### Changing the problem
 
