@@ -356,10 +356,6 @@ footer {
 <span class="eq">ω<sub>t</sub> + u·∇ω = ν ∇<sup>2</sup>ω,&nbsp;&nbsp;&nbsp;∇<sup>2</sup>ψ = −ω,&nbsp;&nbsp;&nbsp;u = (ψ<sub>y</sub>, −ψ<sub>x</sub>)<span class="note">vorticity–streamfunction form</span></span>
 <p>In vorticity form the velocity depends linearly on ω, so the model is still quadratic. Start with a periodic box (Taylor–Green vortex or decaying turbulence) using a pseudo-spectral solver; a lid-driven cavity is a natural second case. <strong>NLA angle:</strong> the state now has 10<sup>4</sup>–10<sup>5</sup> unknowns, so the snapshot matrix is tall and skinny. Computing the POD basis cheaply becomes its own problem: method of snapshots vs. randomized SVD. Each time step also needs a Poisson solve (FFT on the periodic box, conjugate gradient or multigrid in the cavity).</p>
 
-<h3><span class="who a">Planned</span> Einstein field equations (reduced)</h3>
-<span class="eq">G<sub>μν</sub> = 8π T<sub>μν</sub><span class="note">spherically symmetric, coupled to a massless scalar field</span></span>
-<p>Full 3+1 numerical relativity is far beyond a course project, so we’ll do the standard 1+1 reduction: a massless scalar field collapsing in spherical symmetry (Choptuik’s problem). We’ll stay in the subcritical regime, where the field disperses and no black hole forms. The metric functions satisfy ODEs in <span class="math">r</span> (the constraints) at every time step, and the scalar field evolves by a wave equation. <strong>NLA angle:</strong> the nonlinearity isn’t polynomial (metric functions appear in denominators), so OpInf’s polynomial form doesn’t fit directly. We’d need a lifting transformation: add auxiliary variables until the system becomes quadratic (Qian et al., 2020). This is the most demanding item on the list.</p>
-
 <h3><span class="who b">If time permits</span> Nonlinear Schrödinger (NLS)</h3>
 <span class="eq">i ψ<sub>t</sub> + ψ<sub>xx</sub> + 2 |ψ|<sup>2</sup> ψ = 0<span class="note">focusing, periodic domain</span></span>
 <p>Easy to simulate with a split-step Fourier method. Splitting ψ into real and imaginary parts gives a real system with a <em>cubic</em> nonlinearity, so the model needs a cubic operator acting on non-redundant products <span class="math">q̂<sub>i</sub> q̂<sub>j</sub> q̂<sub>k</sub></span>. <strong>NLA angle:</strong> <span class="math">D</span> then has <span class="math">r + r(r+1)(r+2)/6</span> columns (695 at <span class="math">r</span> = 15, vs. 135 for a quadratic model), so conditioning and regularization become much harder. NLS also conserves mass and energy, which is a direct check on the learned ROM; Hamiltonian OpInf (Sharma, Wang &amp; Kramer, 2022) preserves that structure.</p>
@@ -368,6 +364,10 @@ footer {
 <span class="eq">D<sub>μ</sub> F<sup>μν</sup> = 0<span class="note">classical SU(2), on a lattice</span></span>
 <p>The equations of motion have both quadratic and cubic terms in the gauge field, so the model needs both operators. The new difficulty is gauge freedom: many different field configurations describe the same physical state, so snapshots must be gauge-fixed first, or POD spends its modes on gauge artifacts instead of physics. A spatially homogeneous reduction turns the problem into a small chaotic ODE system, which would be a useful warm-up.</p>
 
+<h3><span class="who b">If time permits</span> Einstein field equations (reduced)</h3>
+<span class="eq">G<sub>μν</sub> = 8π T<sub>μν</sub><span class="note">spherically symmetric, coupled to a massless scalar field</span></span>
+<p>Full 3+1 numerical relativity is far beyond a course project, so we’ll do the standard 1+1 reduction: a massless scalar field collapsing in spherical symmetry (Choptuik’s problem). We’ll stay in the subcritical regime, where the field disperses and no black hole forms. The metric functions satisfy ODEs in <span class="math">r</span> (the constraints) at every time step, and the scalar field evolves by a wave equation. <strong>NLA angle:</strong> the nonlinearity isn’t polynomial (metric functions appear in denominators), so OpInf’s polynomial form doesn’t fit directly. We’d need a lifting transformation: add auxiliary variables until the system becomes quadratic (Qian et al., 2020). This is the most demanding item on the list, so it comes last.</p>
+
 <div class="table-wrap">
 <table>
   <thead><tr><th>Equation</th><th>Model form</th><th>Columns of D at r = 15</th><th>Main new challenge</th></tr></thead>
@@ -375,9 +375,9 @@ footer {
     <tr><td>Burgers’</td><td>Quadratic</td><td>135</td><td>Baseline</td></tr>
     <tr><td>KdV</td><td>Quadratic</td><td>135</td><td>Stiff solver; slow singular value decay</td></tr>
     <tr><td>Navier–Stokes</td><td>Quadratic</td><td>135</td><td>Large state; cheap SVD</td></tr>
-    <tr><td>Einstein (1+1)</td><td>Quadratic after lifting</td><td>Grows with lifted variables</td><td>Non-polynomial terms; constraints</td></tr>
     <tr><td>NLS</td><td>Cubic</td><td>695</td><td>Conditioning; conserved quantities</td></tr>
     <tr><td>Yang–Mills</td><td>Quadratic + cubic</td><td>815</td><td>Gauge freedom</td></tr>
+    <tr><td>Einstein (1+1)</td><td>Quadratic after lifting</td><td>Grows with lifted variables</td><td>Non-polynomial terms; constraints</td></tr>
   </tbody>
 </table>
 </div>
@@ -386,7 +386,7 @@ footer {
 <p><strong>The learned ROM blows up in long-time prediction.</strong> That’s a result in itself: we’ll report the eigenvalues of <span class="math">Â</span> and show how regularization changes them.</p>
 <p><strong>The Burgers’ solver takes longer than planned.</strong> Fall back to the 1D heat equation (linear, so <span class="math">Ĥ = 0</span>) for the solver and conditioning study, and add Burgers’ once it works.</p>
 <p><strong>Not enough time for all regularization methods.</strong> The L-curve plus the stability-based criterion is the minimum; GCV is the first thing to cut.</p>
-<p><strong>The extra PDEs don’t all fit.</strong> The Burgers’ study comes first and is the core of the report. After that, KdV is the cheapest win since it reuses everything. If the Einstein reduction stalls (lifting or the constraint solve), we’ll document how far we got and move on to Navier–Stokes.</p>
+<p><strong>The extra PDEs don’t all fit.</strong> The Burgers’ study comes first and is the core of the report. After that, KdV is the cheapest win since it reuses everything, then Navier–Stokes. The “if time permits” equations are optional; if we start one and it stalls, we’ll document how far we got.</p>
 
 <h2>Tools</h2>
 <p>Python with NumPy and SciPy. We’ll write the least-squares solves ourselves, since they are the numerical linear algebra content, and use the Willcox group’s open-source <a href="https://github.com/Willcox-Research-Group/rom-operator-inference-Python3"><code>opinf</code></a> package only to check our results.</p>

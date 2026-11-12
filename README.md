@@ -84,9 +84,9 @@ to harder equations, easiest first:
 | Burgers' | In progress | Quadratic | Baseline |
 | Korteweg–de Vries | Planned | Quadratic | Stiff $u_{xxx}$ term; slowly decaying singular values (solitons) |
 | Navier–Stokes (2D, vorticity form) | Planned | Quadratic | Large state; cheap SVD of a tall snapshot matrix |
-| Einstein (1+1, spherical scalar collapse) | Planned | Quadratic after lifting | Non-polynomial terms; constraint solves |
 | Nonlinear Schrödinger | If time permits | Cubic | $D$ grows like $r^3$; conserved quantities |
 | Yang–Mills (classical SU(2)) | If time permits | Quadratic + cubic | Gauge freedom |
+| Einstein (1+1, spherical scalar collapse) | If time permits | Quadratic after lifting | Non-polynomial terms; constraint solves |
 
 ## Notes
 
