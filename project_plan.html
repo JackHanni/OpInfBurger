@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Learning reduced models of Burgers’ equation: project plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #EEF2F5;
+  --sheet: #FFFFFF;
+  --ink: #17233A;
+  --muted: #5A6880;
+  --rule: #CBD4DF;
+  --blue: #2B6A8F;
+  --blue-soft: #DCE9F1;
+  --amber: #B7791F;
+  --amber-soft: #F6EBD6;
+  --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #101722;
+    --sheet: #172131;
+    --ink: #E3E9F1;
+    --muted: #9AA8BC;
+    --rule: #2C3A50;
+    --blue: #7FB6D8;
+    --blue-soft: #1D3346;
+    --amber: #E3A94F;
+    --amber-soft: #352A17;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #101722;
+  --sheet: #172131;
+  --ink: #E3E9F1;
+  --muted: #9AA8BC;
+  --rule: #2C3A50;
+  --blue: #7FB6D8;
+  --blue-soft: #1D3346;
+  --amber: #E3A94F;
+  --amber-soft: #352A17;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+main {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+h1, h2, h3 {
+  font-family: var(--sans);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+h1 {
+  font-size: clamp(1.9rem, 5vw, 2.6rem);
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+}
+h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 3rem 0 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 2px solid var(--ink);
+}
+h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.35rem;
+}
+p { margin: 0 0 1rem; }
+.lede {
+  font-size: 1.2rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+.math {
+  font-family: var(--serif);
+  font-style: italic;
+  white-space: nowrap;
+}
+.eq {
+  display: block;
+  background: var(--sheet);
+  border-left: 3px solid var(--blue);
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0 1.25rem;
+  font-style: italic;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.eq .note {
+  font-style: normal;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-left: 1rem;
+}
+
+/* hero spectrum */
+figure.spectrum {
+  margin: 2rem 0 0.5rem;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  padding: 1rem 1rem 0.5rem;
+}
+figure.spectrum svg { width: 100%; height: auto; display: block; }
+figure.spectrum figcaption {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--muted);
+  padding: 0.5rem 0 0.25rem;
+}
+.ax { stroke: var(--rule); stroke-width: 1; }
+.ax-label { fill: var(--muted); font-family: var(--sans); font-size: 12px; }
+.sv-kept { fill: var(--blue); }
+.sv-cut { fill: none; stroke: var(--muted); stroke-width: 1.2; }
+.trunc { stroke: var(--amber); stroke-width: 2; stroke-dasharray: 5 4; }
+.trunc-label { fill: var(--amber); font-family: var(--sans); font-size: 13px; font-weight: 600; }
+
+/* questions */
+ol.questions { padding-left: 1.4rem; margin: 0 0 1rem; }
+ol.questions li { margin-bottom: 0.6rem; padding-left: 0.25rem; }
+ol.questions li::marker { font-family: var(--sans); font-weight: 600; color: var(--blue); }
+
+/* tracks */
+.tracks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.track {
+  background: var(--sheet);
+  padding: 1rem 1.1rem 0.5rem;
+  border-top: 4px solid var(--blue);
+}
+.track.b { border-top-color: var(--amber); }
+.track h3 { margin-top: 0; }
+.track ul { padding-left: 1.1rem; margin: 0 0 0.75rem; }
+.track li { margin-bottom: 0.35rem; }
+.shared {
+  background: var(--sheet);
+  padding: 0.85rem 1.1rem;
+  border-top: 4px solid var(--ink);
+}
+.shared p { margin: 0; }
+@media (max-width: 600px) {
+  .tracks { grid-template-columns: 1fr; }
+}
+
+/* timeline */
+.timeline { list-style: none; padding: 0; margin: 1rem 0; counter-reset: wk; }
+.timeline li {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.timeline li:first-child { border-top: 1px solid var(--rule); }
+.wk {
+  font-family: var(--sans);
+  font-weight: 600;
+  color: var(--blue);
+}
+.timeline strong { font-family: var(--sans); font-weight: 600; }
+.timeline p { margin: 0.2rem 0 0; }
+.who {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  padding: 0 0.45rem;
+  margin-right: 0.3rem;
+  border-radius: 3px;
+}
+.who.a { background: var(--blue-soft); color: var(--blue); }
+.who.b { background: var(--amber-soft); color: var(--amber); }
+.who.both { background: var(--rule); color: var(--ink); }
+
+/* table */
+.table-wrap { overflow-x: auto; margin: 1rem 0; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 32rem;
+  background: var(--sheet);
+  font-size: 0.95rem;
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--rule);
+}
+th {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.refs { padding-left: 1.2rem; }
+.refs li { margin-bottom: 0.6rem; }
+a { color: var(--blue); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+footer {
+  margin-top: 3rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Learning reduced models of Burgers’ equation</h1>
+<p class="lede">A numerical linear algebra study of Operator Inference: how the least-squares problem behind it is conditioned, solved and regularized, and when it recovers the operators that projection would give.</p>
+
+<figure class="spectrum" aria-labelledby="spec-cap">
+  <svg id="spec" viewBox="0 0 600 230" role="img" aria-label="Decaying singular values of a snapshot matrix on a log scale, with a truncation line at r equals 12. Values to the left are kept as the reduced basis; values to the right are discarded."></svg>
+  <figcaption id="spec-cap">Singular values of the snapshot matrix decay quickly. Keeping the first <span class="math">r</span> left singular vectors gives the POD basis; everything in this project happens in that <span class="math">r</span>-dimensional space.</figcaption>
+</figure>
+
+<h2>The idea in one paragraph</h2>
+<p>High-fidelity PDE solvers are expensive. A reduced-order model (ROM) replaces thousands of unknowns with a handful by projecting onto a low-dimensional basis. The classical (intrusive) way builds the reduced operators from the solver’s own matrices. Operator Inference (OpInf) instead learns them from simulation data by solving a linear least-squares problem. We’ll build both on the same test problem and use them to study the linear algebra: the SVD that defines the basis, and the least-squares solve that defines the model.</p>
+
+<h2>Setup</h2>
+<h3>Test problem</h3>
+<p>Viscous Burgers’ equation on a 1D interval with fixed boundary conditions:</p>
+<span class="eq">u<sub>t</sub> + u u<sub>x</sub> = ν u<sub>xx</sub></span>
+<p>Its quadratic nonlinearity matches the structure OpInf is designed for. A finite-difference discretization with <span class="math">n</span> grid points gives the full-order model</p>
+<span class="eq">dq/dt = A q + H (q ⊗ q),&nbsp;&nbsp;&nbsp;q(t) ∈ ℝ<sup>n</sup></span>
+
+<h3>Reduced basis</h3>
+<p>Collect snapshots <span class="math">Q = [q(t<sub>1</sub>), …, q(t<sub>k</sub>)]</span>, take the SVD, and keep the first <span class="math">r</span> left singular vectors as <span class="math">V<sub>r</sub></span>. The reduced state is <span class="math">q̂ = V<sub>r</sub><sup>T</sup> q</span>.</p>
+
+<h3>Two ways to get the reduced model <span class="math">dq̂/dt = Â q̂ + Ĥ (q̂ ⊗ q̂)</span></h3>
+<p><strong>Intrusive (Galerkin projection):</strong> use the known operators directly.</p>
+<span class="eq">Â = V<sub>r</sub><sup>T</sup> A V<sub>r</sub>,&nbsp;&nbsp;&nbsp;Ĥ = V<sub>r</sub><sup>T</sup> H (V<sub>r</sub> ⊗ V<sub>r</sub>)</span>
+<p><strong>Operator Inference:</strong> never touch <span class="math">A</span> or <span class="math">H</span>. Project the snapshots and their time derivatives, then fit the operators.</p>
+<span class="eq">min<sub>Ô</sub> ‖ D Ô<sup>T</sup> − Ṙ<sup>T</sup> ‖<sub>F</sub><sup>2</sup> + λ ‖ Ô ‖<sub>F</sub><sup>2</sup><span class="note">D = [ Q̂<sup>T</sup> &nbsp;(Q̂ ⊗ Q̂)<sup>T</sup> ],&nbsp; Ô = [ Â &nbsp;Ĥ ]</span></span>
+<p>Using the non-redundant quadratic terms, <span class="math">D</span> has <span class="math">r + r(r+1)/2</span> columns, so its size and conditioning change quickly with <span class="math">r</span>. That’s the heart of the project.</p>
+
+<h2>Questions we’ll answer</h2>
+<ol class="questions">
+  <li><strong>Recovery.</strong> With clean data and exact derivatives, does OpInf reproduce the intrusive operators? How far off is it when derivatives come from finite differences of the snapshots?</li>
+  <li><strong>Conditioning.</strong> How does the condition number of <span class="math">D</span> grow with <span class="math">r</span>, and what drives it?</li>
+  <li><strong>Solvers.</strong> How do normal equations, Householder QR and the (truncated) SVD compare in accuracy and cost as <span class="math">D</span> gets worse?</li>
+  <li><strong>Regularization.</strong> How should <span class="math">λ</span> be chosen? We’ll compare the L-curve and generalized cross-validation against the stability-based criterion from McQuarrie, Huang &amp; Willcox (2021).</li>
+  <li><strong>Robustness.</strong> How do noise in the snapshots and the choice of <span class="math">r</span> affect long-time predictions beyond the training window?</li>
+</ol>
+
+<h2>Who does what</h2>
+<div class="tracks">
+  <div class="track a">
+    <h3><span class="who a">Track A</span> Full-order model &amp; basis</h3>
+    <ul>
+      <li>Burgers’ solver and snapshot generation</li>
+      <li>POD basis via SVD; singular value decay and projection error vs. <span class="math">r</span></li>
+      <li>Intrusive Galerkin ROM as the reference</li>
+      <li>Derivative estimates and noisy datasets</li>
+    </ul>
+  </div>
+  <div class="track b">
+    <h3><span class="who b">Track B</span> Regression &amp; regularization</h3>
+    <ul>
+      <li>Building <span class="math">D</span> with compact quadratic terms</li>
+      <li>Normal equations, QR and SVD solvers</li>
+      <li>Condition number study vs. <span class="math">r</span></li>
+      <li>Tikhonov regularization; L-curve, GCV and stability-based <span class="math">λ</span></li>
+    </ul>
+  </div>
+</div>
+<div class="shared">
+  <p><span class="who both">Together</span> Compare the intrusive and learned ROMs, make the figures, and write the report.</p>
+</div>
+
+<h2>Timeline</h2>
+<ol class="timeline">
+  <li>
+    <span class="wk">Weeks 1–2</span>
+    <div>
+      <strong>Full-order model and basis</strong>
+      <p><span class="who a">A</span>Working Burgers’ solver, snapshots, POD basis. <span class="who b">B</span>Read the OpInf papers, set up the data matrix and a first least-squares solve on synthetic data.</p>
+    </div>
+  </li>
+  <li>
+    <span class="wk">Week 3</span>
+    <div>
+      <strong>First ROMs</strong>
+      <p><span class="who a">A</span>Intrusive Galerkin ROM. <span class="who b">B</span>Basic, unregularized OpInf ROM. <span class="who both">Both</span>Check that the two agree on clean data.</p>
+    </div>
+  </li>
+  <li>
+    <span class="wk">Weeks 4–5</span>
+    <div>
+      <strong>Core experiments</strong>
+      <p><span class="who b">B</span>Solver comparison, condition number vs. <span class="math">r</span>, regularization selection. <span class="who a">A</span>Noise and derivative-error experiments, long-time prediction tests.</p>
+    </div>
+  </li>
+  <li>
+    <span class="wk">Week 6</span>
+    <div>
+      <strong>Figures and write-up</strong>
+      <p><span class="who both">Both</span>Final figures, report and presentation.</p>
+    </div>
+  </li>
+</ol>
+
+<h2>Planned figures</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Figure</th><th>What it shows</th><th>Answers</th></tr></thead>
+  <tbody>
+    <tr><td>Singular value decay</td><td>σ<sub>k</sub> of the snapshot matrix and projection error vs. <span class="math">r</span></td><td>How big <span class="math">r</span> needs to be</td></tr>
+    <tr><td>Operator recovery</td><td>‖Â<sub>OpInf</sub> − Â<sub>intrusive</sub>‖ vs. <span class="math">r</span>, exact vs. estimated derivatives</td><td>Question 1</td></tr>
+    <tr><td>Conditioning</td><td>κ(D) vs. <span class="math">r</span> on a log scale</td><td>Question 2</td></tr>
+    <tr><td>Solver accuracy</td><td>Residual and operator error for each solver vs. κ(D)</td><td>Question 3</td></tr>
+    <tr><td>L-curve</td><td>Residual norm vs. solution norm over <span class="math">λ</span>, with each method’s choice marked</td><td>Question 4</td></tr>
+    <tr><td>Predictions</td><td>Full-order vs. both ROMs in space–time, inside and beyond the training window</td><td>Question 5</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Beyond Burgers’</h2>
+<p>Once the Burgers’ study is done, we’ll reuse the same pipeline (snapshots → SVD → least squares → ROM) on harder equations. Each one changes the linear algebra in a different way: the polynomial degree of the model sets how fast <span class="math">D</span> grows with <span class="math">r</span>, and the physics sets how fast the singular values decay. They’re listed in the order we plan to do them, easiest first.</p>
+
+<h3><span class="who a">Planned</span> Korteweg–de Vries (KdV)</h3>
+<span class="eq">u<sub>t</sub> + 6 u u<sub>x</sub> + u<sub>xxx</sub> = 0<span class="note">periodic domain</span></span>
+<p>The nonlinearity is quadratic, like Burgers’, so the model form and data matrix carry over unchanged. The solver needs care because the third derivative is stiff: Fourier pseudo-spectral in space with an exponential integrator (ETDRK4) in time. <strong>NLA angle:</strong> solitons travel without spreading out, so the singular values decay much more slowly than for Burgers’. A two-soliton collision is a good stress test for how large <span class="math">r</span> has to be.</p>
+
+<h3><span class="who a">Planned</span> Navier–Stokes (2D, incompressible)</h3>
+<span class="eq">ω<sub>t</sub> + u·∇ω = ν ∇<sup>2</sup>ω,&nbsp;&nbsp;&nbsp;∇<sup>2</sup>ψ = −ω,&nbsp;&nbsp;&nbsp;u = (ψ<sub>y</sub>, −ψ<sub>x</sub>)<span class="note">vorticity–streamfunction form</span></span>
+<p>In vorticity form the velocity depends linearly on ω, so the model is still quadratic. Start with a periodic box (Taylor–Green vortex or decaying turbulence) using a pseudo-spectral solver; a lid-driven cavity is a natural second case. <strong>NLA angle:</strong> the state now has 10<sup>4</sup>–10<sup>5</sup> unknowns, so the snapshot matrix is tall and skinny. Computing the POD basis cheaply becomes its own problem: method of snapshots vs. randomized SVD. Each time step also needs a Poisson solve (FFT on the periodic box, conjugate gradient or multigrid in the cavity).</p>
+
+<h3><span class="who a">Planned</span> Einstein field equations (reduced)</h3>
+<span class="eq">G<sub>μν</sub> = 8π T<sub>μν</sub><span class="note">spherically symmetric, coupled to a massless scalar field</span></span>
+<p>Full 3+1 numerical relativity is far beyond a course project, so we’ll do the standard 1+1 reduction: a massless scalar field collapsing in spherical symmetry (Choptuik’s problem). We’ll stay in the subcritical regime, where the field disperses and no black hole forms. The metric functions satisfy ODEs in <span class="math">r</span> (the constraints) at every time step, and the scalar field evolves by a wave equation. <strong>NLA angle:</strong> the nonlinearity isn’t polynomial (metric functions appear in denominators), so OpInf’s polynomial form doesn’t fit directly. We’d need a lifting transformation: add auxiliary variables until the system becomes quadratic (Qian et al., 2020). This is the most demanding item on the list.</p>
+
+<h3><span class="who b">If time permits</span> Nonlinear Schrödinger (NLS)</h3>
+<span class="eq">i ψ<sub>t</sub> + ψ<sub>xx</sub> + 2 |ψ|<sup>2</sup> ψ = 0<span class="note">focusing, periodic domain</span></span>
+<p>Easy to simulate with a split-step Fourier method. Splitting ψ into real and imaginary parts gives a real system with a <em>cubic</em> nonlinearity, so the model needs a cubic operator acting on non-redundant products <span class="math">q̂<sub>i</sub> q̂<sub>j</sub> q̂<sub>k</sub></span>. <strong>NLA angle:</strong> <span class="math">D</span> then has <span class="math">r + r(r+1)(r+2)/6</span> columns (695 at <span class="math">r</span> = 15, vs. 135 for a quadratic model), so conditioning and regularization become much harder. NLS also conserves mass and energy, which is a direct check on the learned ROM; Hamiltonian OpInf (Sharma, Wang &amp; Kramer, 2022) preserves that structure.</p>
+
+<h3><span class="who b">If time permits</span> Yang–Mills</h3>
+<span class="eq">D<sub>μ</sub> F<sup>μν</sup> = 0<span class="note">classical SU(2), on a lattice</span></span>
+<p>The equations of motion have both quadratic and cubic terms in the gauge field, so the model needs both operators. The new difficulty is gauge freedom: many different field configurations describe the same physical state, so snapshots must be gauge-fixed first, or POD spends its modes on gauge artifacts instead of physics. A spatially homogeneous reduction turns the problem into a small chaotic ODE system, which would be a useful warm-up.</p>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Equation</th><th>Model form</th><th>Columns of D at r = 15</th><th>Main new challenge</th></tr></thead>
+  <tbody>
+    <tr><td>Burgers’</td><td>Quadratic</td><td>135</td><td>Baseline</td></tr>
+    <tr><td>KdV</td><td>Quadratic</td><td>135</td><td>Stiff solver; slow singular value decay</td></tr>
+    <tr><td>Navier–Stokes</td><td>Quadratic</td><td>135</td><td>Large state; cheap SVD</td></tr>
+    <tr><td>Einstein (1+1)</td><td>Quadratic after lifting</td><td>Grows with lifted variables</td><td>Non-polynomial terms; constraints</td></tr>
+    <tr><td>NLS</td><td>Cubic</td><td>695</td><td>Conditioning; conserved quantities</td></tr>
+    <tr><td>Yang–Mills</td><td>Quadratic + cubic</td><td>815</td><td>Gauge freedom</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Risks and fallbacks</h2>
+<p><strong>The learned ROM blows up in long-time prediction.</strong> That’s a result in itself: we’ll report the eigenvalues of <span class="math">Â</span> and show how regularization changes them.</p>
+<p><strong>The Burgers’ solver takes longer than planned.</strong> Fall back to the 1D heat equation (linear, so <span class="math">Ĥ = 0</span>) for the solver and conditioning study, and add Burgers’ once it works.</p>
+<p><strong>Not enough time for all regularization methods.</strong> The L-curve plus the stability-based criterion is the minimum; GCV is the first thing to cut.</p>
+<p><strong>The extra PDEs don’t all fit.</strong> The Burgers’ study comes first and is the core of the report. After that, KdV is the cheapest win since it reuses everything. If the Einstein reduction stalls (lifting or the constraint solve), we’ll document how far we got and move on to Navier–Stokes.</p>
+
+<h2>Tools</h2>
+<p>Python with NumPy and SciPy. We’ll write the least-squares solves ourselves, since they are the numerical linear algebra content, and use the Willcox group’s open-source <a href="https://github.com/Willcox-Research-Group/rom-operator-inference-Python3"><code>opinf</code></a> package only to check our results.</p>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>S. A. McQuarrie, C. Huang &amp; K. E. Willcox. Data-driven reduced-order models via regularised Operator Inference for a single-injector combustion process. <em>Journal of the Royal Society of New Zealand</em> 51(2):194–211, 2021. <a href="https://doi.org/10.1080/03036758.2020.1863237">doi:10.1080/03036758.2020.1863237</a></li>
+  <li>P. Benner, S. Gugercin &amp; K. Willcox. A survey of projection-based model reduction methods for parametric dynamical systems. <em>SIAM Review</em> 57(4):483–531, 2015. <a href="https://doi.org/10.1137/130932715">doi:10.1137/130932715</a></li>
+  <li>B. Kramer, B. Peherstorfer &amp; K. E. Willcox. Learning nonlinear reduced models from data with Operator Inference. <em>Annual Review of Fluid Mechanics</em> 56, 2024. <a href="https://doi.org/10.1146/annurev-fluid-121021-025220">doi:10.1146/annurev-fluid-121021-025220</a></li>
+  <li>E. Qian, B. Kramer, B. Peherstorfer &amp; K. Willcox. Lift &amp; Learn: Physics-informed machine learning for large-scale nonlinear dynamical systems. <em>Physica D</em> 406:132401, 2020. <a href="https://doi.org/10.1016/j.physd.2020.132401">doi:10.1016/j.physd.2020.132401</a></li>
+  <li>H. Sharma, Z. Wang &amp; B. Kramer. Hamiltonian operator inference: Physics-preserving learning of reduced-order models for canonical Hamiltonian systems. <em>Physica D</em> 431:133122, 2022. <a href="https://doi.org/10.1016/j.physd.2021.133122">doi:10.1016/j.physd.2021.133122</a></li>
+  <li>M. W. Choptuik. Universality and scaling in gravitational collapse of a massless scalar field. <em>Physical Review Letters</em> 70(1):9–12, 1993. <a href="https://doi.org/10.1103/PhysRevLett.70.9">doi:10.1103/PhysRevLett.70.9</a></li>
+</ol>
+
+<footer>Numerical Linear Algebra course project, BYU</footer>
+</main>
+
+<script>
+(function () {
+  var svg = document.getElementById('spec');
+  if (!svg) return;
+  var NS = 'http://www.w3.org/2000/svg';
+  var W = 600, H = 230, L = 52, R = 20, T = 18, B = 34;
+  var K = 40, rCut = 12;
+  var yMin = -8, yMax = 0;
+  function el(name, attrs, text) {
+    var e = document.createElementNS(NS, name);
+    for (var a in attrs) e.setAttribute(a, attrs[a]);
+    if (text) e.textContent = text;
+    svg.appendChild(e);
+    return e;
+  }
+  function x(k) { return L + (k - 1) / (K - 1) * (W - L - R); }
+  function y(v) { return T + (yMax - v) / (yMax - yMin) * (H - T - B); }
+  el('line', { x1: L, y1: H - B, x2: W - R, y2: H - B, 'class': 'ax' });
+  el('line', { x1: L, y1: T, x2: L, y2: H - B, 'class': 'ax' });
+  [0, -2, -4, -6, -8].forEach(function (p) {
+    el('text', { x: L - 8, y: y(p) + 4, 'text-anchor': 'end', 'class': 'ax-label' }, '10' + (p === 0 ? '⁰' : '⁻' + '⁰¹²³⁴⁵⁶⁷⁸⁹'[-p]));
+  });
+  [1, 10, 20, 30, 40].forEach(function (k) {
+    el('text', { x: x(k), y: H - B + 18, 'text-anchor': 'middle', 'class': 'ax-label' }, k);
+  });
+  el('text', { x: W - R, y: H - B - 8, 'text-anchor': 'end', 'class': 'ax-label' }, 'index k');
+  el('text', { x: x(26), y: T + 4, 'class': 'ax-label' }, 'σₖ / σ₁ (log scale)');
+  for (var k = 1; k <= K; k++) {
+    var v = Math.max(-0.42 * (k - 1) - 0.004 * (k - 1) * (k - 1), -7.2 + 0.25 * Math.sin(k * 1.7));
+    el('circle', { cx: x(k), cy: y(v), r: 3.6, 'class': k <= rCut ? 'sv-kept' : 'sv-cut' });
+  }
+  var xc = (x(rCut) + x(rCut + 1)) / 2;
+  el('line', { x1: xc, y1: T, x2: xc, y2: H - B, 'class': 'trunc' });
+  el('text', { x: xc + 8, y: T + 26, 'class': 'trunc-label' }, 'truncate at r');
+})();
+</script>
+</body>
+</html>

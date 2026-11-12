@@ -73,6 +73,21 @@ out = run_burgers(merge(default_params, (ν = 0.01, N = 401, name = "nu0p01")))
 
 The `name` prefix keeps outputs from different runs separate.
 
+## Roadmap
+
+The full plan (questions, timeline, figures, risks) is in [`project_plan.html`](project_plan.html).
+After the Burgers' study, the same pipeline (snapshots → SVD → least squares → ROM) will be applied
+to harder equations, easiest first:
+
+| Equation | Status | Model form | Main new challenge |
+|---|---|---|---|
+| Burgers' | In progress | Quadratic | Baseline |
+| Korteweg–de Vries | Planned | Quadratic | Stiff $u_{xxx}$ term; slowly decaying singular values (solitons) |
+| Navier–Stokes (2D, vorticity form) | Planned | Quadratic | Large state; cheap SVD of a tall snapshot matrix |
+| Einstein (1+1, spherical scalar collapse) | Planned | Quadratic after lifting | Non-polynomial terms; constraint solves |
+| Nonlinear Schrödinger | If time permits | Cubic | $D$ grows like $r^3$; conserved quantities |
+| Yang–Mills (classical SU(2)) | If time permits | Quadratic + cubic | Gauge freedom |
+
 ## Notes
 
 - Keep `N ≳ 1/ν`; smaller ν gives steeper fronts and needs a finer grid.
